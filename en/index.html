@@ -172,11 +172,10 @@
       background-color: rgba(70, 131, 244, 0.1);
     }
 
-    /* Main Banner Video Style */
+    /* Main Banner Ad Style */
     .hero-screenshot {
       width: 1000px;
       max-width: 100%;
-      height: 600px;
       margin: 0 auto;
       border-radius: 12px;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
@@ -184,39 +183,20 @@
       background-color: #f0f0f0;
     }
     
-    /* Video Container Relative Positioning */
-    .video-container {
-      position: relative;
-      cursor: pointer;
-    }
-    
-    /* Video Overlay */
-    .video-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
+    /* Ad Container Style */
+    .ad-container {
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.3s ease;
-      z-index: 10;
+      margin: 0 auto;
+      text-align: center;
+      display: none;
     }
     
-    /* Overlay Text Style */
-    .overlay-text {
-      color: white;
-      font-size: 36px;
-      font-weight: 600;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    /* Hide Overlay */
-    .video-overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
+    /* Responsive Ad Container */
+    @media (max-width: 768px) {
+      .ad-container {
+        width: 100%;
+        margin: 0 auto;
+      }
     }
 
     /* Download Modal Style */
@@ -678,10 +658,17 @@
         <i class="fas fa-check-circle" style="color: #4CAF50; margin-right: 8px;"></i>
         <span style="color: #666;">Current tool is the latest </span>
       </div>
-      <!-- Main Banner Video - Bilibili Embed -->
-      <div class="hero-screenshot video-container">
-        <!-- Bilibili Player -->
-        <iframe id="bilibili-player" src="//player.bilibili.com/player.html?isOutside=true&aid=116012049503745&bvid=BV1DCfoBxEJF&cid=35817785585&p=1&autoplay=0&loop=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 100%; min-height: 300px;"></iframe>
+      <!-- Main Banner Ad -->
+      <div class="hero-screenshot">
+        <!-- Google AdSense -->
+        <div class="ad-container">
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5020583079217470" crossorigin="anonymous"></script>
+          <!-- tools -->
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5020583079217470" data-ad-slot="8426680426" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
       </div>
     </header>
 
@@ -904,8 +891,22 @@
       }
     });
     
-    // Video player reference
-    const bilibiliPlayer = document.getElementById('bilibili-player');
+    // Ad loading monitoring
+    const adContainer = document.querySelector('.ad-container');
+    
+    function monitorAdLoading() {
+      setTimeout(() => {
+        if (adContainer) {
+          const adContent = adContainer.querySelector('.adsbygoogle');
+          if (adContent) {
+            const adHeight = adContent.offsetHeight;
+            if (adHeight > 0) {
+              adContainer.style.display = 'block';
+            }
+          }
+        }
+      }, 2000);
+    }
     
     // Download modal logic
     const downloadModal = document.getElementById('download-modal');
@@ -1023,39 +1024,28 @@
     // Initialize on page load
     window.addEventListener('DOMContentLoaded', initPage);
     
-    // Add click event for each download button
-    downloadButtons.forEach(button => {
-      button.addEventListener('click', function(e) {
-        // Check if it's the "All Tools" button, if so don't prevent default behavior
-        if (this.getAttribute('href') === 'https://all.calipertools.com') {
-          return; // Return directly, don't prevent default behavior
-        }
-        
-        // Prevent default behavior, prevent page jump
+    // Add event delegation for download buttons
+    document.addEventListener('click', function(e) {
+      // Check if it's a download button (not the "All Tools" button)
+      const button = e.target.closest('.download-buttons .btn:not([href="https://all.calipertools.com"])');
+      if (button) {
         e.preventDefault();
         
         // Get current platform
-        const platform = this.getAttribute('data-platform');
+        const platform = button.getAttribute('data-platform');
         
         // Find corresponding feature data
         const slug = `Aria2-${platform}`;
         const feature = featureData[slug];
         
         if (feature) {
-          // Update page URL without refreshing
-          const newUrl = `/en/${slug}`;
-          history.pushState({ slug }, feature.title, newUrl);
-          
-          // Update page title and description
-          updatePageInfo(feature);
-          
           // Highlight corresponding download button
-          downloadButtons.forEach(btn => {
+          document.querySelectorAll('.download-buttons .btn').forEach(btn => {
             btn.classList.remove('btn-blue');
             btn.classList.add('btn-outline');
           });
-          this.classList.remove('btn-outline');
-          this.classList.add('btn-blue');
+          button.classList.remove('btn-outline');
+          button.classList.add('btn-blue');
           
           // Calculate link count
           const linkCount = Object.keys(feature.links).length;
@@ -1063,8 +1053,6 @@
           if (linkCount === 1) {
             // Only one link, open in new window
             const firstLink = Object.values(feature.links)[0];
-            
-            // Open link in new window
             window.open(firstLink, '_blank', 'noopener,noreferrer');
           } else {
             // Multiple links, generate options and show modal
@@ -1072,8 +1060,11 @@
             downloadModal.style.display = 'block';
           }
         }
-      });
+      }
     });
+    
+    // Start ad loading monitoring
+    window.addEventListener('load', monitorAdLoading);
     
     // Add popstate event listener, handle browser forward/back
     window.addEventListener('popstate', function(e) {
