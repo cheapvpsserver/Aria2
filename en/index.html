@@ -172,32 +172,7 @@
       background-color: rgba(70, 131, 244, 0.1);
     }
 
-    /* Main Banner Ad Style */
-    .hero-screenshot {
-      width: 1000px;
-      max-width: 100%;
-      margin: 0 auto;
-      border-radius: 12px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-      overflow: hidden;
-      background-color: #f0f0f0;
-    }
-    
-    /* Ad Container Style */
-    .ad-container {
-      width: 100%;
-      margin: 0 auto;
-      text-align: center;
-      display: none;
-    }
-    
-    /* Responsive Ad Container */
-    @media (max-width: 768px) {
-      .ad-container {
-        width: 100%;
-        margin: 0 auto;
-      }
-    }
+
 
     /* Download Modal Style */
     .modal {
@@ -619,7 +594,7 @@
   </style>
   <!-- Add before existing script tags -->
 
-</head>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5020583079217470"crossorigin="anonymous"></script> </head>
 <body>
   <!-- Navigation Bar -->
   <nav>
@@ -658,18 +633,7 @@
         <i class="fas fa-check-circle" style="color: #4CAF50; margin-right: 8px;"></i>
         <span style="color: #666;">Current tool is the latest </span>
       </div>
-      <!-- Main Banner Ad -->
-      <div class="hero-screenshot">
-        <!-- Google AdSense -->
-        <div class="ad-container">
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5020583079217470" crossorigin="anonymous"></script>
-          <!-- tools -->
-          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-5020583079217470" data-ad-slot="8426680426" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          <script>
-          (adsbygoogle = window.adsbygoogle || []).push({});
-          </script>
-        </div>
-      </div>
+
     </header>
 
     <!-- Features Section -->
@@ -891,23 +855,7 @@
       }
     });
     
-    // Ad loading monitoring
-    const adContainer = document.querySelector('.ad-container');
-    
-    function monitorAdLoading() {
-      setTimeout(() => {
-        if (adContainer) {
-          const adContent = adContainer.querySelector('.adsbygoogle');
-          if (adContent) {
-            const adHeight = adContent.offsetHeight;
-            if (adHeight > 0) {
-              adContainer.style.display = 'block';
-            }
-          }
-        }
-      }, 2000);
-    }
-    
+
     // Download modal logic
     const downloadModal = document.getElementById('download-modal');
     const closeModal = document.getElementById('close-modal');
@@ -1063,9 +1011,7 @@
       }
     });
     
-    // Start ad loading monitoring
-    window.addEventListener('load', monitorAdLoading);
-    
+
     // Add popstate event listener, handle browser forward/back
     window.addEventListener('popstate', function(e) {
       // Reinitialize page, display content based on new URL
